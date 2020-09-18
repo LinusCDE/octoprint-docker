@@ -73,6 +73,7 @@ RUN make install
 RUN pip install dockerpty && \
     apt-get install -y socat
 ENV SOCAT_DEV /dev/ttyUSB_REMOTE
+ENV SOCAT_REMOTE_PROTO=tcp
 ENV SOCAT_REMOTE_ADDR=
 
 # Copy services into s6 servicedir and set default ENV vars

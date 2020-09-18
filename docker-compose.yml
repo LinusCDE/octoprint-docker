@@ -14,6 +14,7 @@ services:
     environment:
      - SOCAT_DEV: /dev/ttyUSB_REMOTE
 #    You can also use ser2net on the other end.
+#     - SOCAT_REMOTE_PROTO: tcp # tcp or udp
 #     - SOCAT_REMOTE_ADDR: ip:port
   
   ####
