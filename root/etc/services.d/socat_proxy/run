@@ -1,0 +1,21 @@
+#!/usr/bin/with-contenv sh
+
+if [ -z $SOCAT_DEV ] || [ -z $SOCAT_REMOTE_ADDR ]; then
+  echo "[SOCAT_PROXY] Both \$SOCAT_DEV (\"${SOCAT_DEV}\") and \$SOCAT_REMOTE_ADDR (\"${SOCAT_REMOTE_ADDR}\") are needed for this service. Not starting the socat proxy."
+  sleep 3600 # 1h
+  exit # Will get restarted anyway
+fi
+
+# (Can also connect to ser2net devices)
+echo "[SOCAT_PROXY] Starting. Device is \"$SOCAT_DEV\" and remote address is \"$SOCAT_REMOTE_ADDR\""
+#socat -dd pty,link=$1,waitslave tcp:$2
+
+while true; do
+  socat -dd PTY,raw,echo=0,link=$SOCAT_DEV,waitslave tcp:$SOCAT_REMOTE_ADDR
+  code=$?
+  if [ $code -ne 0 ]; then
+    echo "[SOCAT_PROXY] socat failed with exit-code $code. Restarting in 30 seconds." >&2
+    sleep 30
+  fi
+  echo "[SOCAT_PROXY] Client disconnected. Restarting."
+done
