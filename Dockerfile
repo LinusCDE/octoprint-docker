@@ -75,6 +75,10 @@ RUN pip install dockerpty && \
 ENV SOCAT_DEV /dev/ttyUSB_REMOTE
 ENV SOCAT_REMOTE_PROTO=tcp
 ENV SOCAT_REMOTE_ADDR=
+# Socat tos value in hex (0xNN), useful for udp.
+# See https://www.cisco.com/c/en/us/td/docs/switches/datacenter/nexus1000/sw/4_0/qos/configuration/guide/nexus1000v_qos/qos_6dscp_val.pdf
+# The field is actually DSCP which superseeded TOS (RFC791 s3.1) in RFC 2474.
+ENV SOCAT_REMOTE_TOS=
 
 # Copy services into s6 servicedir and set default ENV vars
 COPY root /

@@ -7,12 +7,14 @@ if [ -z $SOCAT_DEV ] || [ -z $SOCAT_REMOTE_ADDR ]; then
 fi
 
 [ -z $SOCAT_REMOTE_PROTO ] && SOCAT_REMOTE_PROTO=tcp
+# See https://tools.ietf.org/html/rfc791#section-3.1
+[ ! -z $SOCAT_REMOTE_TOS ] && SOCAT_REMOTE_TOS=",tos=$SOCAT_REMOTE_TOS"
 
 # (Can also connect to ser2net devices)
 echo "[SOCAT_PROXY] Starting. Device is \"$SOCAT_DEV\" and remote address is \"$SOCAT_REMOTE_ADDR\" (using $SOCAT_REMOTE_PROTO)"
 
 while true; do
-  socat -dd PTY,raw,echo=0,link=$SOCAT_DEV,waitslave $SOCAT_REMOTE_PROTO:$SOCAT_REMOTE_ADDR
+  socat -dd PTY,raw,echo=0,link=$SOCAT_DEV,waitslave $SOCAT_REMOTE_PROTO:${SOCAT_REMOTE_ADDR}$SOCAT_REMOTE_TOS
   code=$?
   if [ $code -ne 0 ]; then
     echo "[SOCAT_PROXY] socat failed with exit-code $code. Restarting in 30 seconds." >&2
